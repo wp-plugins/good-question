@@ -236,7 +236,7 @@ function gq_options_update() {
 	$activated = '';
 	$answers = array();
 	$clear = '';
-	$page = get_option( 'gq_page' );
+	$page = '';
 
 	if ( isset( $_POST['gq_register_page'] ) )
 		$page = sanitize_text_field( $_POST['gq_register_page'] );

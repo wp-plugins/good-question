@@ -3,8 +3,8 @@
 Plugin Name: Good Question
 Plugin URI:
 Description: Simple plugin to create an unique question and prevent spam-bots registration on your site.
-Version: 1.0
-Release Date: 02/04/2013
+Version: 1.0.1
+Release Date: 02/06/2013
 Author: Artem Frolov (dikiyforester)
 Author URI: http://forums.appthemes.com/members/dikiyforester/
 License: GPLv2 or later
