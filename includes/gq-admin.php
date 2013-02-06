@@ -236,6 +236,10 @@ function gq_options_update() {
 	$activated = '';
 	$answers = array();
 	$clear = '';
+	$page = get_option( 'gq_page' );
+
+	if ( isset( $_POST['gq_register_page'] ) )
+		$page = sanitize_text_field( $_POST['gq_register_page'] );
 
 	if ( isset( $_POST['gq_clear'] ) && 'Yes' == $_POST['gq_clear'] )
 		$clear = 'Yes';
@@ -280,6 +284,7 @@ function gq_options_update() {
 	 update_option( 'gq_activated', $activated );
 	 update_option( 'gq_answers', $answers );
 	 update_option( 'gq_clear', $clear );
+	 update_option( 'gq_page', $page );
 
 }
 
