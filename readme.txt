@@ -1,9 +1,9 @@
 === Good Question ===
 Contributors: dikiy_forester
-Tags: registration, spam
+Tags: registration, antispam, buddypress
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: 1.0.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,8 @@ User must select all the correct answers, if the user makes a mistake - it will 
 
 Key features of the plugin:
 
-*   Compatible with most themes.
+*   Compatible with most WP themes.
+*   Compatible with BuddyPress themes.
 *   Works with WordPress MU SignUp form.
 *   Simple and lightweight.
 *   Allow to create your own unique Question and set of Answers.
@@ -51,6 +52,9 @@ Key features of the plugin:
 
 
 == Changelog ==
+
+= 1.1 =
+* Provided compatibility with BuddyPress SignUP form
 
 = 1.0.1 =
 * Fixed "Registration Page" option
