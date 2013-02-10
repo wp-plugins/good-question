@@ -3,8 +3,8 @@
 Plugin Name: Good Question
 Plugin URI:
 Description: Simple plugin to create an unique question and prevent spam-bots registration on your site.
-Version: 1.0.1
-Release Date: 02/06/2013
+Version: 1.1
+Release Date: 02/10/2013
 Author: Artem Frolov (dikiyforester)
 Author URI: http://forums.appthemes.com/members/dikiyforester/
 License: GPLv2 or later
@@ -37,12 +37,35 @@ define('GQ_URL', WP_PLUGIN_URL . '/' . GQ_FOLDER);
 define('GQ_TITLE', 'Good Question');
 define('GQ_MENU', 'Good Question');
 
-if( is_admin() ) {
+if ( is_admin() ) {
 	require( GQ_DIR . '/includes/gq-admin.php' );
 	register_activation_hook( __FILE__, 'gq_activate' );
 	register_deactivation_hook( __FILE__, 'gq_deactivate' );
 	add_action( 'admin_init', 'gq_register_styles' );
 	add_action( 'admin_menu',  'gq_init_plugin_menu', 10 );
+}
+
+if ( function_exists( 'bp_init' ) ) {
+	add_action( 'bp_init', 'gq_bp_init'  );
+	add_action( 'bp_signup_validate', 'gq_check_answers_bp'  );
+} else {
+	add_action( 'template_redirect', 'gq_where_to_run' );
+	add_action( 'login_head', 'gq_print_styles' );
+	add_action( 'register_form', 'gq_print_question', 100 );
+	add_filter( 'registration_errors', 'gq_check_answers', 20, 1 );
+}
+
+/**
+ * Works for BuddyPress
+ * if is register gage now - will add actions
+ *
+ * @since 1.1
+ */
+function gq_bp_init(){
+	if ( bp_is_register_page() ) {
+		add_action( 'bp_head', 'gq_print_styles' );
+		add_action( 'bp_before_registration_submit_buttons', 'gq_print_question', 100 );
+	}
 }
 
 /**
@@ -65,7 +88,6 @@ function gq_print_styles() {
 /**
  * If registration form placed on custom specified page
  * plugin styles will be printed on this page,
- * Otherwise on standard WP registration page.
  *
  * @since 1.0
  * @return type
@@ -73,10 +95,8 @@ function gq_print_styles() {
 function gq_where_to_run() {
 	if ( is_page( get_option( 'gq_page' ) ) )
 		add_action( 'wp_head', 'gq_print_styles' );
-	else
-		add_action( 'login_head', 'gq_print_styles' );
 }
-add_action( 'template_redirect', 'gq_where_to_run' );
+
 
 /**
  * Print Good Question html on registration page
@@ -97,6 +117,7 @@ function gq_print_question() {
 					<div id="gq-wrapper">
 						<h3 id="gq-title"><?php esc_html_e( $question['title'] ); ?></h3>
 						<p id="gq-question"><?php esc_html_e( $question['question'] ); ?></p>
+						<?php do_action( 'bp_go_home_bot_errors' ); ?>
 						<ol id="gq-answers-list">
 							<?php
 							foreach ( $answers as $key => $answer ) {
@@ -117,7 +138,7 @@ function gq_print_question() {
 				<?php
 
 }
-add_action( 'register_form', 'gq_print_question', 100 );
+
 
 /**
  * Check the answers and returns an error during user registration
@@ -154,7 +175,24 @@ function gq_check_answers($errors){
 	}
 	return $errors;
 }
-add_filter( 'registration_errors', 'gq_check_answers', 20, 1 );
+
+
+/**
+ * Uses function gq_check_answers($errors) adapted to BuddyPress sign-up errors
+ *
+ * @since 1.1
+ * @global type $bp
+ */
+function gq_check_answers_bp(){
+	global $bp;
+	$errors = new WP_Error();
+	$err = gq_check_answers($errors);
+
+	if ( ! empty( $err->errors ) )
+		$bp->signup->errors['go_home_bot'] = $err->errors['go_home_bot'][0];
+
+	unset( $errors );
+}
 
 
 /**
